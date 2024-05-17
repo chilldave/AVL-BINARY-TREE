@@ -18,9 +18,10 @@ void menu();
 // Functions to create a new node, insert and show the AVL TREE
 stNode* createNode(int number);
 void insertNode(stNode*& root, int number);
+void searchNode(stNode* root, int number);
 void showTree(stNode* root);
-
-// Functions to balance the AVL TREE
+void deleteNode(stNode*& root, int number);
+// Functions to balance the AVL TREE    
 int height(stNode* root);
 void updateHeight(stNode*& root);
 
@@ -31,9 +32,6 @@ int main(int argc, char const *argv[])
     stNode* ptrRoot = nullptr;
 
     menu();
-
-    std::cout << "\t DISPLAYING AVL BINARY TREE \n";    
-    showTree(ptrRoot);
 
     return 0;
 }
@@ -48,8 +46,10 @@ void menu(){
     while(true){
         std::cout << "\t\t\t AVL BINARY TREE \n";
         std::cout << "\n[1]. Insert Node \n";
-        std::cout << "\n[2]. Show Tree \n";
-        std::cout << "\n[3]. Exit \n";
+        std::cout << "\n[2]. Search Node \n";
+        std::cout << "\n[3]. Delete Node \n";
+        std::cout << "\n[4]. Show Tree \n";
+        std::cout << "\n[5]. Exit \n";
         std::cout << "\nChoose an option: ";
         std::cin >> option;
 
@@ -64,12 +64,30 @@ void menu(){
                 std::cin.get();
                 break;
             case 2:
+                // system("clear");
+                std::cout << "\t\t\t SEARCH NODE IN AVL TREE \n\n";
+                std::cout << "\t Enter a number: ";
+                std::cin >> option;
+                searchNode(root, option);
+                std::cin.get();
+                std::cin.get();
+                break;
+            case 3:
+                // system("clear");
+                std::cout << "\t\t\t DELETE NODE IN AVL TREE \n\n";
+                std::cout << "\t Enter a number: ";
+                std::cin >> option;
+                deleteNode(root, option);
+                std::cin.get();
+                std::cin.get();
+                break;
+            case 4:
                 showTree(root);
                 std::cin.get();
                 std::cin.get();
 
                 break;
-            case 3:
+            case 5:
                 exit(0);
                 break;
             default:
@@ -87,7 +105,6 @@ stNode* createNode(int number){
     ptrNew->number = number;
     ptrNew->left = nullptr;
     ptrNew->right = nullptr;
-    // ptrNew->height = 0;
 
     return ptrNew;
 }
@@ -97,11 +114,13 @@ void insertNode(stNode*& root, int number ){
         
     // if the root is null, we are going to create a new node.
     if(root == nullptr){
+        // we are going to create a new node
         root = createNode(number);
-        // vamos a asignarle el valor del nodo de primer nivel ( nodo raiz )
+        // we are going to set the mainRoot with the root, with purpose to have a reference to the root and not include the same value at root
         if(mainRoot == nullptr){
             mainRoot = root;
         }
+
         std::cout << "\n\t Nodo insertado. \n" ;
         //we are going to update the height of the root
         updateHeight(root);
@@ -115,21 +134,29 @@ void insertNode(stNode*& root, int number ){
         
     //ahora hacemos las dos validaciones, si # <= root->number, si es menor o igual, se va a insertar a la izquierda
     // si es mayor se va a insertar a la derecha
-    if(number <= root->number){
-        insertNode(root->left, number);   
-    }else {
-        insertNode(root->right, number);
-    }
+    (number <= root->number) ? insertNode(root->left, number): insertNode(root->right, number);
     updateHeight(root);
+}
+
+void searchNode(stNode* root, int number){
+    if(root == nullptr)
+        return;
+    // else
+
+    if(root->number == number)
+        std::cout << "Node found: " << root->number << root <<std::endl;
+    
+    (number <= root->number) ? searchNode(root->left, number): searchNode(root->right, number);
+
+}
+
+void deleteNode(stNode*& root, int number){
+    
 }
 
 void showTree(stNode* root){
     if(root != nullptr){
-        std::cout << root->number << " - ";
-        // std::cout << "direction: " << root << " - \n";
-        // std::cout << "Left: " << root->left << " - \n";
-        // std::cout << "Right: " << root->right << " - \n";
-        
+        std::cout << root->number << " - ";       
         std::cout << "Height: " << root->height << std::endl;
         showTree(root->left);
         showTree(root->right);  
@@ -137,9 +164,8 @@ void showTree(stNode* root){
 }
 
 int height(stNode* root){   
-    return (root == nullptr) ? root->height : 0;
+    return (root==nullptr) ? 0:root->height;
 }
-
 
 
 void updateHeight(stNode*& root){

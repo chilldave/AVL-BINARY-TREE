@@ -14,3 +14,9 @@ Steps to compiling and running:
 - once the project had been cloned, it needs to be compiled, use the follow command:
   g++ <name.cpp> -o <output.exe>   (for linux it's not necessary to include extension)
 
+Features of AVL Tree
+- Insert a node in BST
+- Search a node in BST
+- Delete a node in BST
+- Display the BST
+- Exit
