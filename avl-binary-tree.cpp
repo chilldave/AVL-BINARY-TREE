@@ -1,4 +1,6 @@
 #include <iostream>
+#include <stack>
+#include <algorithm>
 
 typedef struct Node{
     int number;
@@ -8,15 +10,21 @@ typedef struct Node{
 }stNode;
 
 // Global variables, it will help us out to avoid 
-stNode* ptrNew, *ptrAux, *mainRoot=nullptr;
 int counter;
+stNode* ptrNew, *ptrAux, *mainRoot=nullptr;
+
 
 void menu();
+// Functions to create a new node, insert and show the AVL TREE
 stNode* createNode(int number);
 void insertNode(stNode*& root, int number);
-
 void showTree(stNode* root);
-void balanceTree(stNode*& root);
+
+// Functions to balance the AVL TREE
+int height(stNode* root);
+void updateHeight(stNode*& root);
+
+
 
 int main(int argc, char const *argv[])
 {
@@ -57,7 +65,6 @@ void menu(){
                 break;
             case 2:
                 showTree(root);
-                std::cout << "\nCOUNTER: " << counter << std::endl;
                 std::cin.get();
                 std::cin.get();
 
@@ -80,7 +87,7 @@ stNode* createNode(int number){
     ptrNew->number = number;
     ptrNew->left = nullptr;
     ptrNew->right = nullptr;
-    ptrNew->height = 1;
+    // ptrNew->height = 0;
 
     return ptrNew;
 }
@@ -96,9 +103,10 @@ void insertNode(stNode*& root, int number ){
             mainRoot = root;
         }
         std::cout << "\n\t Nodo insertado. \n" ;
+        //we are going to update the height of the root
+        updateHeight(root);
         counter++;
         return;
-
     }
     if(number == mainRoot->number){
     std::cout << "\t\nEl nodo es igual al valor de la raiz, no insertardo. \n";
@@ -112,24 +120,45 @@ void insertNode(stNode*& root, int number ){
     }else {
         insertNode(root->right, number);
     }
+    updateHeight(root);
 }
-
-
 
 void showTree(stNode* root){
     if(root != nullptr){
         std::cout << root->number << " - ";
-        std::cout << "direction: " << root << " - \n";
-        std::cout << "Left: " << root->left << " - \n";
-        std::cout << "Right: " << root->right << " - \n";
-        // std::cout << "Height: " << root->height << std::endl;
+        // std::cout << "direction: " << root << " - \n";
+        // std::cout << "Left: " << root->left << " - \n";
+        // std::cout << "Right: " << root->right << " - \n";
+        
+        std::cout << "Height: " << root->height << std::endl;
         showTree(root->left);
         showTree(root->right);  
     }
 }
 
+int height(stNode* root){   
+    return (root == nullptr) ? root->height : 0;
+}
 
 
 
+void updateHeight(stNode*& root){
+    if(root != nullptr){
+        // height(root->left) = 1
+        // height(root->right) = 0
+        //root->height = 2
+        root->height = 1 + std::max(height(root->left), height(root->right));
+    }
+}
+/*
+levels: 
+    20 -> height 1
+
+levels:
+    20 -> height 3
+    10 -> height 2
+    5 -> height 1
 
 
+
+*/
