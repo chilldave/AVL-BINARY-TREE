@@ -23,12 +23,18 @@ stNode *createNode(int number);
 void insertNode(stNode *&root, int number);
 void searchNode(stNode *root, int number);
 void showTree(stNode *root);
-stNode *findNode_Right_SI(stNode *root);
+stNode *getNode_Right_SI(stNode *root);
 void deleteNode(stNode *&root, int number);
 
 // Functions to balance the AVL TREE
-int height(stNode *root);
+int getHeight(stNode *root);
 void updateHeight(stNode *&root);
+int getBalance(stNode *root);
+stNode *getRightRotate(stNode *&root);
+stNode *getLeftRotate(stNode *&root);
+stNode *getDoubleRightRotate(stNode *&root);
+stNode *getDoubleLeftRotate(stNode *&root);
+stNode *balanceTree(stNode *&root);
 
 int main(int argc, char const *argv[]) {
     stNode *ptrRoot = nullptr;
@@ -166,6 +172,7 @@ void insertNode(stNode *&root, int number) {
         std::cout << "\n\t Nodo Insertado. \n";
         // we are going to update the height of the root
         updateHeight(root);
+        root = balanceTree(root);
         counter++;
         return;
     }
@@ -179,6 +186,7 @@ void insertNode(stNode *&root, int number) {
     //  si es mayor se va a insertar a la derecha
     (number <= root->number) ? insertNode(root->left, number) : insertNode(root->right, number);
     updateHeight(root);
+    root = balanceTree(root);
 }
 
 void searchNode(stNode *root, int number) {
@@ -196,7 +204,7 @@ void searchNode(stNode *root, int number) {
 }
 
 // This function will help us out to find out where and what is the maximum value of Node more right in left subtree (Node+D: SI)
-stNode *findNode_Right_SI(stNode *root) {
+stNode *getNode_Right_SI(stNode *root) {
     while (root->right != nullptr) {
         root = root->right;
     }
@@ -208,7 +216,6 @@ void deleteNode(stNode *&root, int number) {
         Case 1:  when there is a leaf in the binary tree
         Case 2:  when the father only has a child
         Case 3:  when the father has two children
-
     */
 
     if (root == nullptr) {
@@ -239,12 +246,13 @@ void deleteNode(stNode *&root, int number) {
         }
         // case 3: when the father has two children
         else {
-            ptrAux = findNode_Right_SI(root->left);
+            ptrAux = getNode_Right_SI(root->left);
             root->number = ptrAux->number;
             deleteNode(root->left, ptrAux->number);
         }
     }
     updateHeight(root);
+    root = balanceTree(root);
 }
 
 void showTree(stNode *root) {
@@ -255,7 +263,7 @@ void showTree(stNode *root) {
     }
 }
 
-int height(stNode *root) {
+int getHeight(stNode *root) {
     return (root == nullptr) ? 0 : root->height;
 }
 
@@ -264,7 +272,7 @@ void updateHeight(stNode *&root) {
         // height(root->left) = 1
         // height(root->right) = 0
         // root->height = 2
-        root->height = 1 + std::max(height(root->left), height(root->right));
+        root->height = 1 + std::max(getHeight(root->left), getHeight(root->right));
     }
 }
 /*
@@ -279,3 +287,69 @@ levels:
 
 
 */
+
+int getBalance(stNode *root) {
+    return (root == nullptr) ? 0 : getHeight(root->left) - getHeight(root->right);
+}
+// this function is the same as we learned in class, we know it as "Left-Left CASE"
+stNode *getRightRotate(stNode *&root) {
+    ptrAux = root->left;
+    root->left = ptrAux->right;
+
+    ptrAux->right = root;
+
+    // we are going to update the height of the root
+    updateHeight(root);
+    updateHeight(ptrAux);
+
+    return ptrAux;
+}
+
+// this function is the same as we learned in class, we know it as "Right-Right CASE"
+stNode *getLeftRotate(stNode *&root) {
+    ptrAux = root->right;
+    root->right = ptrAux->left;
+    ptrAux->left = root;
+
+    // we are going to update the height of the root
+    updateHeight(root);
+    updateHeight(ptrAux);
+
+    return ptrAux;
+}
+// this function is the same as we learned in class, we know it as "Left-Right CASE"
+stNode *getDoubleRightRotate(stNode *&root) {
+    root->left = getLeftRotate(root->left);
+    return getRightRotate(root);
+}
+// this function is the same as we learned in class, we know it as "Right-Left CASE"
+stNode *getDoubleLeftRotate(stNode *&root) {
+    root->right = getRightRotate(root->right);
+    return getLeftRotate(root);
+}
+
+stNode *balanceTree(stNode *&root) {
+    // we are going to get the balance of the root
+    int balance = getBalance(root);
+
+    // Left-Left CASE
+    if (balance > 1 && getBalance(root->left) > 0) {
+        return getRightRotate(root);
+    }
+    // Right-Right CASE
+    if (balance < -1 && getBalance(root->right) < 0) {
+        return getLeftRotate(root);
+    }
+
+    // Left-Right CASE
+    if (balance > 1 && getBalance(root->left) < 0) {
+        return getDoubleRightRotate(root);
+    }
+
+    // Right-Left CASE
+    if (balance < -1 && getBalance(root->right) > 0) {
+        return getDoubleLeftRotate(root);
+    }
+
+    return root;
+}
