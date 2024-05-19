@@ -1,6 +1,8 @@
 #include <iostream>
 #include <stack>
 #include <algorithm>
+#include <conio.h>
+
 
 typedef struct Node{
     int number;
