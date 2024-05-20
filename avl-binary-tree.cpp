@@ -1,3 +1,5 @@
+#include <ncurses.h>
+
 #include <algorithm>
 #include <iostream>
 #include <limits>
@@ -257,7 +259,7 @@ void deleteNode(stNode *&root, int number) {
 
 void showTree(stNode *root) {
     if (root != nullptr) {
-        std::cout << "\t" << root->number << " - " << "Height: " << root->height << std::endl;
+        std::cout << "\t" << root->number;
         showTree(root->left);
         showTree(root->right);
     }
@@ -295,9 +297,7 @@ int getBalance(stNode *root) {
 stNode *getRightRotate(stNode *&root) {
     ptrAux = root->left;
     root->left = ptrAux->right;
-
     ptrAux->right = root;
-
     // we are going to update the height of the root
     updateHeight(root);
     updateHeight(ptrAux);
