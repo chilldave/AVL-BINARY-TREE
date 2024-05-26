@@ -76,8 +76,8 @@ stNode *balanceTree(stNode *&root);
 
 int main(int argc, char const *argv[]) {
     system("cls");
-    SetConsoleWindowSize(1650,600);
-    setConsoleSize(180,35);
+    SetConsoleWindowSize(1660,600);
+    setConsoleSize(185,35);
     menu();
     return 0;
 }
@@ -133,7 +133,6 @@ void menu() {
                 case 1: //Insert a Node
                     system("cls");
                     gotoxy(33,5); std::cout << "INSERTAR UN NODO EN EL ARBOL AVL.";
-                    gotoxy(90,5); std::cout << "mainRoot -> " << mainRoot;
                     option = getRightInput();
                     insertNode(root, option);
                     gotoxy(24,22); std::cout << "Presione enter para continuar...";
@@ -153,6 +152,7 @@ void menu() {
                             gotoxy(20,10); std::cout << "El Nodo No Existe En El Arbol AVL.";
                         }
                     }
+                    gotoxy(24,22); std::cout << "Presione enter para continuar...";
                     std::cin.get();
                     std::cin.get();
                     break;
@@ -171,6 +171,7 @@ void menu() {
                             gotoxy(20,10); std::cout << "El Nodo No Existe En El Arbol AVL.";
                         }
                     }
+                    gotoxy(24,22); std::cout << "Presione enter para continuar...";
                     std::cin.get();
                     std::cin.get();
                     break;
@@ -178,13 +179,8 @@ void menu() {
                     system("cls");
                     gotoxy(40,5); std::cout << "VISUALIZAR EL ARBOL AVL";
                     if (root == nullptr) {
-                        gotoxy(171,8); std::cout << "*";
-
-                        gotoxy(0,8); std::cout << "*";
                         gotoxy(25,8); std::cout << "El Arbol AVL Esta Vacio.";
                     } else {
-                        gotoxy(179,8); std::cout << "*";
-                        gotoxy(0,8); std::cout << "*";
                         showTree(root,87,8,44); 
                         gotoxy(24,22); std::cout << "Presione enter para continuar...";
                     }
