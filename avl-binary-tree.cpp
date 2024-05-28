@@ -1,8 +1,6 @@
 #include <algorithm>
 #include <iostream>
 #include <limits>
-#include <stack>
-#include <conio.h>
 #include <windows.h>
 
 void SetConsoleWindowSize(int width, int height) {
@@ -235,7 +233,6 @@ void insertNode(stNode *&root, int number) {
         gotoxy(20,9); std::cout << "El Numero Es Igual Al Valor De La Raiz, Nodo Rechazado.";
         return;
     }
-
     // ahora hacemos las dos validaciones, si # <= root->number, si es menor o igual, se va a insertar a la izquierda
     //  si es mayor se va a insertar a la derecha
     (number <= root->number) ? insertNode(root->left, number) : insertNode(root->right, number);
@@ -243,6 +240,7 @@ void insertNode(stNode *&root, int number) {
     root = balanceTree(root);
     mainRoot =  root;  // we are going to update the mainRoot pointer in case the root has change
 }
+
 
 void searchNode(stNode *root, int number) {
     if (root == nullptr)  return;
@@ -261,7 +259,7 @@ stNode *getNode_Right_SI(stNode *root) {
     while (root->right != nullptr) 
         root = root->right;
     return root;
-}
+} 
 
 void deleteNode(stNode *&root, int number) {
     /*
@@ -270,7 +268,6 @@ void deleteNode(stNode *&root, int number) {
         Case 3:  when the father has two children
     */
     if (root == nullptr)  return;
-
     // once we already checked the root is not nullptr, we are going to move on to the next step
     if (number < root->number) {
         deleteNode(root->left, number);
@@ -279,7 +276,6 @@ void deleteNode(stNode *&root, int number) {
     } else {
         // we found the node to delete, so we are going to check the cases and change the flag to true
         flag = true;
-
         // case 1: when there is a leaf in the binary tree
         if (root->left == nullptr && root->right == nullptr) {
             free(root);
